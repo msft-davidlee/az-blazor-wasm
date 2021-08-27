@@ -13,14 +13,6 @@ using System.Collections.Generic;
 
 namespace MyTodo.Api
 {
-    public static class Extensions
-    {
-        public static string GetUsername(this JwtTokenValidationResult result)
-        {
-            return result.Identity.Claims.Single(x => x.Type == "emails").Value;
-        }
-    }
-
     public class TodoApi
     {
         private readonly IJwtTokenValidator _jwtTokenValidator;
