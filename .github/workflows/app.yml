@@ -46,7 +46,7 @@ jobs:
           $deploymentName = "deploy" + (Get-Date).ToString("yyyyMMddHHmmss")
           $deployOutputText = (az deployment group create --name $deploymentName --resource-group ${{ secrets.RESOURCE_GROUP }} --template-file Deployment/deploy.bicep --parameters `
             location=${{ secrets.LOCATION }} `
-            environment=${{ needs.setup.outputs.build_env }} `
+            appEnvironment=${{ needs.setup.outputs.build_env }} `
             branch=${{ github.ref }} `
             clientId=${{ secrets.API_CLIENT_ID }} `
             adInstance=${{ secrets.API_AD_INSTANCE }} `
