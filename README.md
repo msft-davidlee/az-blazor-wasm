@@ -17,6 +17,12 @@ This project demonstrates a Blazor WASM hosted on an Azure Storage Static Websit
 
 ![Architecture](/Architecture/Solution.png)
 
+## Considerations
+1. The API can be seperated from this project as an independent microservice with its own deployment so we can push out features or fixes faster. We do have to make the frontend aware by introducing the API versioning concept. 
+2. We can enhance the API with either Azure Frontdoor or Application Gateway and enable the Web Application Firewall (WAF) feature.
+3. We can apply a free custom domain name on Azure CDN where SSL certificate is applied and rotated for free.
+4. Instead of storing the connection string on the configuration of Azure Functions, we can create a managed identity for the Azure Function and assign the appropriate RBAC role.
+
 # Get Started
 To create this, use your personal Azure subscription with AAD that you control - as well as a B2C instance, please follow the steps below. 
 
@@ -41,3 +47,6 @@ To create this, use your personal Azure subscription with AAD that you control -
 | API_CLIENT_ID | Cient Id of the API found in your app registration in your B2C tenant |
 | LOCATION | location of this workload |
 | SP_ID | user id you have assigned as a managed user identity in your resource group |
+
+## Have an issue?
+You are welcome to create an issue if you need help but please note that there is no timeline to answer or resolve any issues you have with the contents of this project. Use the contents of this project at your own risk!
