@@ -1,0 +1,148 @@
+﻿@page "/"
+@using MyTodo.Shared
+@using System.Text.Json
+@inject AuthenticationStateProvider AuthContext
+@inject HttpClient HttpClient
+@inject IJSRuntime JsRuntime
+@inherits OwningComponentBase
+@code {
+    private bool IsUserAuthenticated;
+    private List<TodoModel> Models;
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthContext.GetAuthenticationStateAsync();
+        if (state.User.Identity.IsAuthenticated)
+        {
+            IsUserAuthenticated = true;
+            await Refresh();
+        }
+    }
+
+    private async Task Refresh()
+    {
+        var response = await HttpClient.GetAsync("/todos");
+        if (!response.IsSuccessStatusCode)
+        {
+            await JsRuntime.InvokeVoidAsync("alert", $"Error: {response.StatusCode}");
+            return;
+        }
+
+        Models = JsonSerializer.Deserialize<List<TodoModel>>(await response.Content.ReadAsStringAsync());
+    }
+
+    private async Task Save(TodoModel todoModel)
+    {
+        var response = await HttpClient.PostAsJsonAsync("todo", todoModel);
+        if (!response.IsSuccessStatusCode)
+        {
+            await JsRuntime.InvokeVoidAsync("alert", $"Error: {response.StatusCode}");
+            return;
+        }
+
+        await Refresh();
+    }
+
+    private async Task UpdateAsDone(TodoModel todoModel)
+    {
+        todoModel.IsDone = true;
+        var response = await HttpClient.PutAsJsonAsync($"todo/{todoModel.Id}", todoModel);
+        if (!response.IsSuccessStatusCode)
+        {
+            await JsRuntime.InvokeVoidAsync("alert", $"Error: {response.StatusCode}");
+            return;
+        }
+
+        await Refresh();
+    }
+
+    private async Task Delete(TodoModel todoModel)
+    {
+        var response = await HttpClient.DeleteAsync($"todo/{todoModel.Id}");
+        if (!response.IsSuccessStatusCode)
+        {
+            await JsRuntime.InvokeVoidAsync("alert", $"Error: {response.StatusCode}");
+            return;
+        }
+
+        await Refresh();
+    }
+}
+
+<div class="container">
+    @if (IsUserAuthenticated)
+    {
+        <div class="row">
+            <h4>You are logged into the TODO app!</h4>
+        </div>
+        <div class="row">
+            @if (Models != null)
+            {
+                <nav class="navbar navbar-light bg-light">
+                    <div class="container-fluid">
+                        <form class="d-flex">
+                        </form>
+                        <form class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary" @onclick="() => Models.Add(new TodoModel { })">Add</button>
+                        </form>
+                    </div>
+                </nav>
+            }
+        </div>
+        <div class="row">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td scope="col">Created</td>
+                        <td scope="col">Description</td>
+                        <td scope="col">Status</td>
+                        <td scope="col"></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Models != null)
+                    {
+                        foreach (var model in Models)
+                        {
+                            <tr>
+                                @if (model.Id != Guid.Empty)
+                                {
+                                    <td scope="row">@model.Created.ToLongDateString()</td>
+                                    <td scope="row">@model.Description</td>
+                                    <td>
+                                        @if (model.IsDone == true)
+                                        {
+                                            <p>Done!</p>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-primary" @onclick="async ()=>await UpdateAsDone(model)">Done</button>
+                                        }
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger" @onclick="async ()=>await Delete(model)">Remove</button>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td><input type="text" @bind-value="@model.Description" /></td>
+                                    <td></td>
+                                    <td> <button class="btn btn-primary" @onclick="async ()=>await Save(model)">Save</button></td>
+                                }
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <h4>Welcome!</h4>
+        </div>
+        <div class="row">
+            <p>Please sign in.</p>
+        </div>
+    }
+</div>

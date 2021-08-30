@@ -1,0 +1,72 @@
+on: push
+
+jobs:
+  setup:
+    name: Choose Secrets Environment Job
+    runs-on: windows-latest
+    steps:
+      - id: setup
+        name: Setup Environment Setp
+        run: |
+            if ('${{ github.ref }}' -eq 'refs/heads/main') { 
+              echo "::set-output name=build_env::prod"
+            } else {
+              echo "::set-output name=build_env::dev"
+            }
+    outputs:
+      build_env: ${{ steps.setup.outputs.build_env }}
+
+  build_deploy:
+    name: Build and Deploy
+    needs: setup
+    environment: ${{ needs.setup.outputs.build_env }}
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET Core SDK 3.1.x
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'
+
+      - name: Setup .NET SDK 5.0.x
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+
+      - name: Azure CLI Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          enable-AzPSSession: true
+
+      - id: buid-and-deploy
+        name: Build Azure environment
+        run: |
+          $deploymentName = "deploy" + (Get-Date).ToString("yyyyMMddHHmmss")
+          $deployOutputText = (az deployment group create --name $deploymentName --resource-group ${{ secrets.RESOURCE_GROUP }} --template-file Deployment/deploy.bicep --parameters `
+            location=${{ secrets.LOCATION }} `
+            appEnvironment=${{ needs.setup.outputs.build_env }} `
+            branch=${{ github.ref }} `
+            clientId=${{ secrets.API_CLIENT_ID }} `
+            adInstance=${{ secrets.API_AD_INSTANCE }} `
+            managedUserId=${{ secrets.SP_ID }} `
+            prefix=${{ secrets.PREFIX }})
+          $deployOutput = $deployOutputText | ConvertFrom-Json
+          $accountName = $deployOutput.properties.outputs.accountName.value
+          $funcName = $deployOutput.properties.outputs.funcName.value
+          echo "::set-output name=accountName::$accountName"
+          echo "::set-output name=funcname::$funcName"
+
+      - uses: kheiakiyama/install-azcopy-action@v1
+        with:
+          version: 'v10'
+
+      - name: Publish Blazor
+        run: |
+          .\Deployment\Publish.ps1 -rgName ${{ secrets.RESOURCE_GROUP }} `
+            -funcName "${{ steps.buid-and-deploy.outputs.funcname }}" `
+            -authority ${{ secrets.CLI_AUTHORITY }} `
+            -clientId ${{ secrets.CLI_CLIENT_ID }} `
+            -scope ${{ secrets.CLI_SCOPE }} `
+            -accountName "${{ steps.buid-and-deploy.outputs.accountName }}"
