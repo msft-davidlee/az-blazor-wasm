@@ -4,10 +4,10 @@ param branch string
 param clientId string
 param adInstance string
 param managedUserId string
-param suffix string
+param prefix string
 param scriptVersion string = utcNow()
 
-var demoName = '${suffix}demo'
+var demoName = '${prefix}demo'
 var tags = {
   'stack-name': demoName
   'environment': appEnvironment

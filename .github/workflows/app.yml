@@ -51,7 +51,7 @@ jobs:
             clientId=${{ secrets.API_CLIENT_ID }} `
             adInstance=${{ secrets.API_AD_INSTANCE }} `
             managedUserId=${{ secrets.SP_ID }} `
-            suffix=${{ secrets.SUFFIX }})
+            prefix=${{ secrets.PREFIX }})
           $deployOutput = $deployOutputText | ConvertFrom-Json
           $accountName = $deployOutput.properties.outputs.accountName.value
           $funcName = $deployOutput.properties.outputs.funcName.value
