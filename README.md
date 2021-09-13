@@ -2,7 +2,10 @@
 The information contained in this README.md file and any accompanying materials (including, but not limited to, scripts, sample codes, etc.) are provided "AS-IS" and "WITH ALL FAULTS." Any estimated pricing information is provided solely for demonstration purposes and does not represent final pricing and Microsoft assumes no liability arising from your use of the information. Microsoft makes NO GUARANTEES OR WARRANTIES OF ANY KIND, WHETHER EXPRESSED OR IMPLIED, in providing this information, including any pricing information.
 
 # Introduction
-This project demonstrates a Blazor WASM hosted on an Azure Storage Static Website with a backend API hosted as an HTTP triggered Azure Function. 
+This project demonstrates a Blazor WASM hosted on an Azure Storage Static Website with a backend API hosted as an HTTP triggered Azure Function.
+
+### Azure Function
+The Azure Function itself is running in .NET 5, and is using the isolated process. For more information on the difference, see: https://docs.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide.
 
 ## Architecture
 1. Azure B2C which provides a platform to sign up and authenticate users. If a user forgets his/her password, it is all taken care of by Azure B2C and we don't have do anything there.
@@ -47,6 +50,9 @@ To create this, use your personal Azure subscription with AAD that you control -
 | API_CLIENT_ID | Cient Id of the API found in your app registration in your B2C tenant |
 | LOCATION | location of this workload |
 | SP_ID | user id you have assigned as a managed user identity in your resource group |
+
+## Docker Support
+This project supports the use of Docker for the Azure Functions API. If you have docker desktop on your local environment, you can also run the Azure Function as a container instance.
 
 ## Have an issue?
 You are welcome to create an issue if you need help but please note that there is no timeline to answer or resolve any issues you have with the contents of this project. Use the contents of this project at your own risk!
