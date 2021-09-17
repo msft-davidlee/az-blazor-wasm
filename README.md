@@ -54,5 +54,21 @@ To create this, use your personal Azure subscription with AAD that you control -
 ## Docker Support
 This project supports the use of Docker for the Azure Functions API. If you have docker desktop on your local environment, you can also run the Azure Function as a container instance.
 
+## Authentication
+For the purpose of testing without authentication enabled, you can add a configuation like so in your API Configurations. This is recommanded only if you are just testing the API directly without a user.
+
+```
+"DisableAuthentication": "true"
+```
+
+An example of invoking an API locally with this option. Notice we no longer require a Header with a bearer token. The user will be unknownuser@contoso.com.
+
+```
+$body = @{ description=$Description; }
+$url = "http://localhost:7071/todo"
+
+Invoke-RestMethod -UseBasicParsing -Uri $url -Body ($body | ConvertTo-Json) -Method Post
+```
+
 ## Have an issue?
 You are welcome to create an issue if you need help but please note that there is no timeline to answer or resolve any issues you have with the contents of this project. Use the contents of this project at your own risk!
