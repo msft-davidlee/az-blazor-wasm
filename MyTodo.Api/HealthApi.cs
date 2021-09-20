@@ -11,8 +11,11 @@ namespace MyTodo.Api
     {
         [Function("Ping")]
         public HttpResponseData Ping(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "ping")] HttpRequestData req)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "ping")] HttpRequestData req,
+            FunctionContext context)
         {
+            context.LogInformation("Ping");
+
             var model = new
             {
                 Value = "pong",

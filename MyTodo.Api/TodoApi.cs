@@ -26,8 +26,10 @@ namespace MyTodo.Api
 
         [Function("AddTodo")]
         public async Task<HttpResponseData> AddTodo(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "todo")] HttpRequestData req)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "todo")] HttpRequestData req,
+            FunctionContext context)
         {
+            context.LogInformation("AddTodo");
 
             var result = await _jwtTokenValidator.Validate(req);
             if (!result.Success)
@@ -52,8 +54,10 @@ namespace MyTodo.Api
         [Function("UpdateTodo")]
         public async Task<HttpResponseData> UpdateTodo(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "todo/{id}")] HttpRequestData req,
+            FunctionContext context,
             string id)
         {
+            context.LogInformation("UpdateTodo");
 
             var result = await _jwtTokenValidator.Validate(req);
             if (!result.Success)
@@ -75,8 +79,11 @@ namespace MyTodo.Api
         [Function("DeleteTodo")]
         public async Task<HttpResponseData> DeleteTodo(
             [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "todo/{id}")] HttpRequestData req,
+            FunctionContext context,
             string id)
         {
+            context.LogInformation("DeleteTodo");
+
             var result = await _jwtTokenValidator.Validate(req);
             if (!result.Success)
             {
@@ -94,8 +101,11 @@ namespace MyTodo.Api
 
         [Function("ListTodo")]
         public async Task<HttpResponseData> ListTodo(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "todos")] HttpRequestData req)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "todos")] HttpRequestData req,
+            FunctionContext context)
         {
+            context.LogInformation("ListTodo");
+
             var result = await _jwtTokenValidator.Validate(req);
             if (!result.Success)
             {
