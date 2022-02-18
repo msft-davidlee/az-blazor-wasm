@@ -24,15 +24,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup .NET Core SDK 3.1.x
+      - name: Setup .NET 6
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '3.1.x'
-
-      - name: Setup .NET SDK 5.0.x
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '5.0.x'
+          dotnet-version: '6.0.x'
 
       - name: Azure CLI Login
         uses: azure/login@v1
@@ -44,10 +39,10 @@ jobs:
         name: Build Azure environment
         run: |
           $deploymentName = "deploy" + (Get-Date).ToString("yyyyMMddHHmmss")
-          $deployOutputText = (az deployment group create --name $deploymentName --resource-group ${{ secrets.RESOURCE_GROUP }} --template-file Deployment/deploy.bicep --parameters `
-            location=${{ secrets.LOCATION }} `
+          $deployOutputText = (az deployment group create --name $deploymentName --resource-group ${{ secrets.RESOURCE_GROUP }} --template-file Deployment/deploy.bicep --parameters `            
             appEnvironment=${{ needs.setup.outputs.build_env }} `
             branch=${{ github.ref }} `
+            version=${{ github.run_number }} `
             clientId=${{ secrets.API_CLIENT_ID }} `
             adInstance=${{ secrets.API_AD_INSTANCE }} `
             managedUserId=${{ secrets.SP_ID }} `

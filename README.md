@@ -48,7 +48,6 @@ To create this, use your personal Azure subscription with AAD that you control -
 | CLI_SCOPE | The App Id found in the API app registration that exposes this API |
 | API_AD_INSTANCE | AD instance found in your B2C tenant |
 | API_CLIENT_ID | Cient Id of the API found in your app registration in your B2C tenant |
-| LOCATION | location of this workload |
 | SP_ID | user id you have assigned as a managed user identity in your resource group |
 
 ## Docker Support
