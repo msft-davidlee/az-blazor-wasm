@@ -8,7 +8,7 @@ param prefix string
 param scriptVersion string = utcNow()
 param version string
 
-var demoName = '${prefix}demo'
+var demoName = prefix
 var tags = {
   'stack-name': demoName
   'stack-environment': appEnvironment
