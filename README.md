@@ -5,7 +5,7 @@ The information contained in this README.md file and any accompanying materials 
 This project demonstrates a Blazor WASM hosted on an Azure Storage Static Website with a backend API hosted as an HTTP triggered Azure Function.
 
 ### Azure Function
-The Azure Function itself is running in .NET 5, and is using the isolated process. For more information on the difference, see: https://docs.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide.
+The Azure Function itself is running in .NET 6, and is using the isolated process. For more information on the difference, see: https://docs.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide.
 
 ## Architecture
 1. Azure B2C which provides a platform to sign up and authenticate users. If a user forgets his/her password, it is all taken care of by Azure B2C and we don't have do anything there.
