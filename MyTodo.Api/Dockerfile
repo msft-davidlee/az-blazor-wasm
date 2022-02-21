@@ -4,11 +4,7 @@ FROM mcr.microsoft.com/azure-functions/dotnet-isolated:3.0-dotnet-isolated5.0 AS
 WORKDIR /home/site/wwwroot
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/runtime:3.1 as runtime3_1
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-# Copy .NET Core 3.1 runtime from the 3.1 image
-COPY --from=runtime3_1 /usr/share/dotnet/host /usr/share/dotnet/host
-COPY --from=runtime3_1 /usr/share/dotnet/shared /usr/share/dotnet/shared
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["MyTodo.Api/MyTodo.Api.csproj", "MyTodo.Api/"]
 COPY ["MyTodo.Shared/MyTodo.Shared.csproj", "MyTodo.Shared/"]
