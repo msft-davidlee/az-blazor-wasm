@@ -32,7 +32,7 @@ jobs:
       - name: Azure CLI Login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.VS_AZURE_CREDENTIALS }}
+          creds: ${{ secrets.MS_AZURE_CREDENTIALS }}
           enable-AzPSSession: true
 
       - id: buid-and-deploy
