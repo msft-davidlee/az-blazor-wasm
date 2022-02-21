@@ -5,7 +5,7 @@ The information contained in this README.md file and any accompanying materials 
 This project demonstrates a Blazor WASM hosted on an Azure Storage Static Website with a backend API hosted as an HTTP triggered Azure Function.
 
 ### Azure Function
-The Azure Function itself is running in .NET 5, and is using the isolated process. For more information on the difference, see: https://docs.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide.
+The Azure Function itself is running in .NET 6, and is using the isolated process. For more information on the difference, see: https://docs.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide.
 
 ## Architecture
 1. Azure B2C which provides a platform to sign up and authenticate users. If a user forgets his/her password, it is all taken care of by Azure B2C and we don't have do anything there.
@@ -40,7 +40,7 @@ To create this, use your personal Azure subscription with AAD that you control -
 ## Secrets
 | Name | Comments |
 | --- | --- |
-| AZURE_CREDENTIALS | <pre>{<br/>&nbsp;&nbsp;&nbsp;&nbsp;"clientId": "",<br/>&nbsp;&nbsp;&nbsp;&nbsp;"clientSecret": "", <br/>&nbsp;&nbsp;&nbsp;&nbsp;"subscriptionId": "",<br/>&nbsp;&nbsp;&nbsp;&nbsp;"tenantId": "" <br/>}</pre> |
+| MS_AZURE_CREDENTIALS | <pre>{<br/>&nbsp;&nbsp;&nbsp;&nbsp;"clientId": "",<br/>&nbsp;&nbsp;&nbsp;&nbsp;"clientSecret": "", <br/>&nbsp;&nbsp;&nbsp;&nbsp;"subscriptionId": "",<br/>&nbsp;&nbsp;&nbsp;&nbsp;"tenantId": "" <br/>}</pre> |
 | PREFIX | mytodos - or whatever name you would like for all your resources |
 | RESOURCE_GROUP | todo - or whatever name you give to the resource group |
 | CLI_AUTHORITY | Authority of the Blazor WASP app |
@@ -48,7 +48,6 @@ To create this, use your personal Azure subscription with AAD that you control -
 | CLI_SCOPE | The App Id found in the API app registration that exposes this API |
 | API_AD_INSTANCE | AD instance found in your B2C tenant |
 | API_CLIENT_ID | Cient Id of the API found in your app registration in your B2C tenant |
-| LOCATION | location of this workload |
 | SP_ID | user id you have assigned as a managed user identity in your resource group |
 
 ## Docker Support

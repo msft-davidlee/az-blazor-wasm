@@ -1,4 +1,4 @@
-param location string = resourceGroup().location
+param location string = 'centralus'
 param appEnvironment string
 param branch string
 param clientId string
@@ -6,12 +6,14 @@ param adInstance string
 param managedUserId string
 param prefix string
 param scriptVersion string = utcNow()
+param version string
 
-var demoName = '${prefix}demo'
+var demoName = prefix
 var tags = {
   'stack-name': demoName
-  'environment': appEnvironment
-  'branch': branch
+  'stack-environment': appEnvironment
+  'stack-version': version
+  'stack-branch': branch
 }
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02-preview' = {
@@ -65,7 +67,7 @@ resource funcapp 'Microsoft.Web/sites@2020-12-01' = {
     serverFarmId: hostingPlan.id
     clientAffinityEnabled: true
     siteConfig: {
-      netFrameworkVersion: 'v5.0'
+      netFrameworkVersion: 'v6.0'
       webSocketsEnabled: true
       appSettings: [
         {
@@ -124,9 +126,6 @@ resource funcapp 'Microsoft.Web/sites@2020-12-01' = {
 resource apiSite 'Microsoft.Web/sites/config@2021-01-15' = {
   parent: funcapp
   name: 'web'
-  dependsOn: [
-    staticWebsiteSetup
-  ]
   properties: {
     cors: {
       allowedOrigins: [
@@ -151,9 +150,6 @@ resource staticWebsiteSetup 'Microsoft.Resources/deploymentScripts@2020-10-01' =
   kind: 'AzurePowerShell'
   location: location
   tags: tags
-  dependsOn: [
-    storageAccount
-  ]
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: {
@@ -177,9 +173,6 @@ resource cdnEndpoint 'Microsoft.Cdn/profiles/endpoints@2020-09-01' = {
   parent: cdn
   location: 'global'
   tags: tags
-  dependsOn: [
-    staticWebsiteSetup
-  ]
   properties: {
     originHostHeader: websiteUrl
     isCompressionEnabled: true
@@ -248,9 +241,6 @@ resource cdnEndpoint 'Microsoft.Cdn/profiles/endpoints@2020-09-01' = {
 resource storageAccountBlobServices 'Microsoft.Storage/storageAccounts/blobServices@2021-04-01' = {
   parent: storageAccount
   name: 'default'
-  dependsOn: [
-    staticWebsiteSetup
-  ]
   properties: {
     cors: {
       corsRules: [
