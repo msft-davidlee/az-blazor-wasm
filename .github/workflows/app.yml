@@ -1,4 +1,7 @@
-on: push
+on: 
+  push:
+    paths-ignore: 
+      - 'README.md'
 
 jobs:
   setup:
@@ -34,6 +37,10 @@ jobs:
         with:
           creds: ${{ secrets.MS_AZURE_CREDENTIALS }}
           enable-AzPSSession: true
+
+      - name: Publish Todo API to ACR
+        run: |
+          .\Deployment\PublishToAcr.ps1 -BUILD_ENV ${{ needs.setup.outputs.build_env }} -VERSION ${{ github.run_number }}
 
       - id: buid-and-deploy
         name: Build Azure environment
