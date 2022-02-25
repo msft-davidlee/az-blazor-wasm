@@ -2,7 +2,7 @@ param([string]$BUILD_ENV)
 
 $ErrorActionPreference = "Stop"
 
-$platformRes = (az resource list --tag stack-name=platform --tag stack-environment=$BUILD_ENV | ConvertFrom-Json)
+$platformRes = (az resource list --tag stack-name=platform --tag stack-environment=prod | ConvertFrom-Json)
 if (!$platformRes) {
     throw "Unable to find eligible platform resources!"
 }
@@ -27,7 +27,7 @@ if ($LastExitCode -ne 0) {
     throw "An error has occured. Unable to list from repository"
 }
 
-$imageName = "mytodoapi:1.0"
+$imageName = "my-todo-api:1.0-${BUILD_ENV}"
 if (!$list -or !$list.Contains($imageName)) {
 
     $path = "/MyTodo.Api"
