@@ -1,4 +1,6 @@
-param([string]$BUILD_ENV)
+param(
+    [string]$BUILD_ENV,
+    [string]$VERSION)
 
 $ErrorActionPreference = "Stop"
 
@@ -27,7 +29,16 @@ if ($LastExitCode -ne 0) {
     throw "An error has occured. Unable to list from repository"
 }
 
-$imageName = "my-todo-api:1.0-${BUILD_ENV}"
+# https://docs.microsoft.com/en-us/azure/container-registry/container-registry-image-tag-version#unique-tags
+$appVersion = "my-todo-api:1.0"
+if ($BUILD_ENV -eq 'dev') {
+    $imageName = "$appVersion.$VERSION-$BUILD_ENV"
+}
+else {
+    $imageName = $appVersion
+}
+
+
 if (!$list -or !$list.Contains($imageName)) {
 
     $path = "/MyTodo.Api"
