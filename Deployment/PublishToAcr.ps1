@@ -2,7 +2,7 @@ param([string]$NETWORKING_PREFIX, [string]$BUILD_ENV)
 
 $ErrorActionPreference = "Stop"
 
-$platformRes = (az resource list --tag stack-name=$NETWORKING_PREFIX | ConvertFrom-Json)
+$platformRes = (az resource list --tag stack-name=$NETWORKING_PREFIX --tag stack-environment $BUILD_ENV | ConvertFrom-Json)
 if (!$platformRes) {
     throw "Unable to find eligible platform resources!"
 }
@@ -10,7 +10,7 @@ if ($platformRes.Length -eq 0) {
     throw "Unable to find 'ANY' eligible platform resources!"
 }
 
-$acr = ($platformRes | Where-Object { $_.type -eq "Microsoft.ContainerRegistry/registries" -and $_.resourceGroup.EndsWith("-$BUILD_ENV") })
+$acr = ($platformRes | Where-Object { $_.type -eq "Microsoft.ContainerRegistry/registries" })
 if (!$acr) {
     throw "Unable to find eligible platform container registry!"
 }
@@ -27,7 +27,7 @@ if ($LastExitCode -ne 0) {
     throw "An error has occured. Unable to list from repository"
 }
 
-$imageName = "MyTodoAPI:1.0"
+$imageName = "mytodoapi:1.0"
 if (!$list -or !$list.Contains($imageName)) {
 
     $path = "/MyTodo.Api"
