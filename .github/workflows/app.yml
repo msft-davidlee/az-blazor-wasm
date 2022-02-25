@@ -40,7 +40,7 @@ jobs:
 
       - name: Publish Todo API to ACR
         run: |
-          .\Deployment\PublishToAcr.ps1 -NETWORKING_PREFIX ${{ secrets.NETWORKING_PREFIX }} -BUILD_ENV ${{ needs.setup.outputs.build_env }}       
+          .\Deployment\PublishToAcr.ps1 -BUILD_ENV ${{ needs.setup.outputs.build_env }}       
 
       - id: buid-and-deploy
         name: Build Azure environment

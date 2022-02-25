@@ -1,8 +1,8 @@
-param([string]$NETWORKING_PREFIX, [string]$BUILD_ENV)
+param([string]$BUILD_ENV)
 
 $ErrorActionPreference = "Stop"
 
-$platformRes = (az resource list --tag stack-name=$NETWORKING_PREFIX --tag stack-environment $BUILD_ENV | ConvertFrom-Json)
+$platformRes = (az resource list --tag stack-name=platform --tag stack-environment=$BUILD_ENV | ConvertFrom-Json)
 if (!$platformRes) {
     throw "Unable to find eligible platform resources!"
 }
