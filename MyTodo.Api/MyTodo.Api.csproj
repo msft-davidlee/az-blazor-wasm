@@ -15,7 +15,7 @@
 		<PackageReference Include="Microsoft.IdentityModel.Protocols" Version="6.16.0" />
 		<PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="6.16.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.16.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.34.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\MyTodo.Shared\MyTodo.Shared.csproj" />
